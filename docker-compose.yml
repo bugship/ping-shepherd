@@ -15,5 +15,20 @@ services:
     volumes:
       - ping-shepherd-pg:/var/lib/postgresql/data
 
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: "8080"
+      DATABASE_URL: postgres://shepherd:shepherd@db:5432/ping_shepherd?sslmode=disable
+      CHECK_INTERVAL: 30s
+      CHECK_TIMEOUT: 5s
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:-}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID:-}
+    depends_on:
+      db:
+        condition: service_healthy
+
 volumes:
   ping-shepherd-pg:
