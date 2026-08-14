@@ -1,3 +1,4 @@
+// Package store persists targets and check results.
 package store
 
 import (
@@ -9,10 +10,12 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 )
 
+// DB is a Postgres-backed store.
 type DB struct {
 	sql *sql.DB
 }
 
+// Open connects to Postgres and pings it.
 func Open(ctx context.Context, databaseURL string) (*DB, error) {
 	if strings.TrimSpace(databaseURL) == "" {
 		return nil, fmt.Errorf("DATABASE_URL is empty")
@@ -29,6 +32,7 @@ func Open(ctx context.Context, databaseURL string) (*DB, error) {
 	return &DB{sql: sqlDB}, nil
 }
 
+// Ping reports whether the database is reachable.
 func (d *DB) Ping(ctx context.Context) error {
 	if d == nil || d.sql == nil {
 		return fmt.Errorf("no database")
@@ -36,6 +40,7 @@ func (d *DB) Ping(ctx context.Context) error {
 	return d.sql.PingContext(ctx)
 }
 
+// Close releases the database connection.
 func (d *DB) Close() {
 	if d != nil && d.sql != nil {
 		_ = d.sql.Close()

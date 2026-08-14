@@ -8,13 +8,14 @@ import (
 	"time"
 )
 
-// Memory is an in-process target store for tests and local runs without Postgres.
+// Memory is an in-process store for tests and runs without Postgres.
 type Memory struct {
 	mu      sync.Mutex
 	targets map[string]Target
 	checks  map[string][]Check
 }
 
+// NewMemory returns an empty in-process store.
 func NewMemory() *Memory {
 	return &Memory{
 		targets: make(map[string]Target),
@@ -22,8 +23,10 @@ func NewMemory() *Memory {
 	}
 }
 
+// Ping always succeeds for the in-process store.
 func (m *Memory) Ping(context.Context) error { return nil }
 
+// CreateTarget inserts a target.
 func (m *Memory) CreateTarget(_ context.Context, in NewTarget) (Target, error) {
 	norm, err := NormalizeTarget(in)
 	if err != nil {
@@ -42,6 +45,7 @@ func (m *Memory) CreateTarget(_ context.Context, in NewTarget) (Target, error) {
 	return t, nil
 }
 
+// ListTargets returns all targets.
 func (m *Memory) ListTargets(_ context.Context) ([]Target, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -52,6 +56,7 @@ func (m *Memory) ListTargets(_ context.Context) ([]Target, error) {
 	return out, nil
 }
 
+// GetTarget returns a target by id.
 func (m *Memory) GetTarget(_ context.Context, id string) (Target, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -62,6 +67,7 @@ func (m *Memory) GetTarget(_ context.Context, id string) (Target, error) {
 	return t, nil
 }
 
+// DeleteTarget removes a target and its checks.
 func (m *Memory) DeleteTarget(_ context.Context, id string) error {
 	m.mu.Lock()
 	defer m.mu.Unlock()

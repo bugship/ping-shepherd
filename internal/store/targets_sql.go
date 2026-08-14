@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// CreateTarget inserts a target.
 func (d *DB) CreateTarget(ctx context.Context, in NewTarget) (Target, error) {
 	norm, err := NormalizeTarget(in)
 	if err != nil {
@@ -28,6 +29,7 @@ func (d *DB) CreateTarget(ctx context.Context, in NewTarget) (Target, error) {
 	return t, nil
 }
 
+// ListTargets returns all targets, oldest first.
 func (d *DB) ListTargets(ctx context.Context) ([]Target, error) {
 	rows, err := d.sql.QueryContext(ctx,
 		`SELECT id, name, url, enabled, created_at FROM targets ORDER BY created_at ASC`,
@@ -50,6 +52,7 @@ func (d *DB) ListTargets(ctx context.Context) ([]Target, error) {
 	return out, rows.Err()
 }
 
+// GetTarget returns a target by id.
 func (d *DB) GetTarget(ctx context.Context, id string) (Target, error) {
 	var t Target
 	err := d.sql.QueryRowContext(ctx,
@@ -65,6 +68,7 @@ func (d *DB) GetTarget(ctx context.Context, id string) (Target, error) {
 	return t, nil
 }
 
+// DeleteTarget removes a target and its checks.
 func (d *DB) DeleteTarget(ctx context.Context, id string) error {
 	res, err := d.sql.ExecContext(ctx, `DELETE FROM targets WHERE id = $1`, id)
 	if err != nil {

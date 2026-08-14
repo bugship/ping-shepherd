@@ -1,3 +1,4 @@
+// Package probe performs HTTP GET checks.
 package probe
 
 import (
@@ -7,6 +8,7 @@ import (
 	"time"
 )
 
+// Result is the outcome of one HTTP GET.
 type Result struct {
 	Up         bool
 	StatusCode int
@@ -14,6 +16,7 @@ type Result struct {
 	Err        string
 }
 
+// URL GETs rawURL. Status codes 2xx and 3xx count as up.
 func URL(ctx context.Context, rawURL string, timeout time.Duration) Result {
 	if timeout <= 0 {
 		timeout = 5 * time.Second

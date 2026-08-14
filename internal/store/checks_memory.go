@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// RecordCheck appends a probe result for the target.
 func (m *Memory) RecordCheck(_ context.Context, targetID string, c Check) (Check, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -23,6 +24,7 @@ func (m *Memory) RecordCheck(_ context.Context, targetID string, c Check) (Check
 	return c, nil
 }
 
+// LatestCheck returns the most recent check for the target.
 func (m *Memory) LatestCheck(_ context.Context, targetID string) (Check, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -36,6 +38,7 @@ func (m *Memory) LatestCheck(_ context.Context, targetID string) (Check, error) 
 	return list[len(list)-1], nil
 }
 
+// ListChecks returns checks for the target, newest first.
 func (m *Memory) ListChecks(_ context.Context, targetID string, limit int) ([]Check, error) {
 	m.mu.Lock()
 	defer m.mu.Unlock()

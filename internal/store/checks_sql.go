@@ -6,6 +6,7 @@ import (
 	"time"
 )
 
+// RecordCheck inserts a probe result for the target.
 func (d *DB) RecordCheck(ctx context.Context, targetID string, c Check) (Check, error) {
 	if _, err := d.GetTarget(ctx, targetID); err != nil {
 		return Check{}, err
@@ -28,6 +29,7 @@ func (d *DB) RecordCheck(ctx context.Context, targetID string, c Check) (Check, 
 	return c, nil
 }
 
+// LatestCheck returns the most recent check for the target.
 func (d *DB) LatestCheck(ctx context.Context, targetID string) (Check, error) {
 	if _, err := d.GetTarget(ctx, targetID); err != nil {
 		return Check{}, err
@@ -48,6 +50,7 @@ func (d *DB) LatestCheck(ctx context.Context, targetID string) (Check, error) {
 	return c, nil
 }
 
+// ListChecks returns checks for the target, newest first.
 func (d *DB) ListChecks(ctx context.Context, targetID string, limit int) ([]Check, error) {
 	if _, err := d.GetTarget(ctx, targetID); err != nil {
 		return nil, err

@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS checks (
 CREATE INDEX IF NOT EXISTS checks_target_checked ON checks (target_id, checked_at DESC);
 `
 
+// Migrate creates the targets and checks tables if they do not exist.
 func (d *DB) Migrate(ctx context.Context) error {
 	if d == nil || d.sql == nil {
 		return fmt.Errorf("no database")

@@ -2,6 +2,7 @@ package store
 
 import "time"
 
+// Check is one probe result for a target.
 type Check struct {
 	ID         string    `json:"id"`
 	TargetID   string    `json:"target_id"`
