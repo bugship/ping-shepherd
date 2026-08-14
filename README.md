@@ -9,8 +9,10 @@ Working now:
 - `GET /health`
 - `GET /ready`
 - `POST /targets`, `GET /targets`, `GET /targets/{id}`, `DELETE /targets/{id}`
+- `GET /targets/{id}/checks`
+- background probes on `CHECK_INTERVAL`
 
-Still to build: checker loop, status page, Telegram.
+Still to build: status page, Telegram.
 
 ## Run
 

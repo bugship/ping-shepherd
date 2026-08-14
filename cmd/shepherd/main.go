@@ -1,3 +1,4 @@
+// Command shepherd runs the Ping Shepherd server.
 package main
 
 import (
@@ -9,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/bugship/ping-shepherd/internal/checker"
 	"github.com/bugship/ping-shepherd/internal/config"
 	"github.com/bugship/ping-shepherd/internal/httpapi"
 	"github.com/bugship/ping-shepherd/internal/store"
@@ -20,19 +22,16 @@ func main() {
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
-	db, err := store.Open(ctx, cfg.DatabaseURL)
-	if err != nil {
-		log.Printf("postgres not ready (%v); /ready will fail until it is", err)
-	} else if err := db.Migrate(ctx); err != nil {
-		log.Fatalf("migrate: %v", err)
+	backend, closer := openStore(ctx, cfg.DatabaseURL)
+	if closer != nil {
+		defer closer()
 	}
-	if db != nil {
-		defer db.Close()
-	}
+
+	go checker.Loop(ctx, backend, cfg.CheckInterval, cfg.CheckTimeout)
 
 	srv := &http.Server{
 		Addr:              cfg.Addr(),
-		Handler:           httpapi.New(db),
+		Handler:           httpapi.New(backend),
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 
@@ -49,4 +48,18 @@ func main() {
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		log.Printf("shutdown: %v", err)
 	}
+}
+
+func openStore(ctx context.Context, databaseURL string) (httpapi.Backend, func()) {
+	db, err := store.Open(ctx, databaseURL)
+	if err != nil {
+		log.Printf("postgres unavailable (%v); using memory store", err)
+		return store.NewMemory(), nil
+	}
+	if err := db.Migrate(ctx); err != nil {
+		log.Printf("migrate failed (%v); using memory store", err)
+		db.Close()
+		return store.NewMemory(), nil
+	}
+	return db, db.Close
 }

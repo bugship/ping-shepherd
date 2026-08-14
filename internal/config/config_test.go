@@ -1,6 +1,9 @@
 package config
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestFromEnvDefaults(t *testing.T) {
 	t.Setenv("PORT", "")
@@ -11,6 +14,9 @@ func TestFromEnvDefaults(t *testing.T) {
 	}
 	if cfg.Addr() != ":8080" {
 		t.Fatalf("addr: got %q", cfg.Addr())
+	}
+	if cfg.CheckInterval != 30*time.Second || cfg.CheckTimeout != 5*time.Second {
+		t.Fatalf("intervals: %v %v", cfg.CheckInterval, cfg.CheckTimeout)
 	}
 }
 
