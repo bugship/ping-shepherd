@@ -12,10 +12,14 @@ import (
 type Memory struct {
 	mu      sync.Mutex
 	targets map[string]Target
+	checks  map[string][]Check
 }
 
 func NewMemory() *Memory {
-	return &Memory{targets: make(map[string]Target)}
+	return &Memory{
+		targets: make(map[string]Target),
+		checks:  make(map[string][]Check),
+	}
 }
 
 func (m *Memory) Ping(context.Context) error { return nil }
@@ -65,6 +69,7 @@ func (m *Memory) DeleteTarget(_ context.Context, id string) error {
 		return ErrNotFound
 	}
 	delete(m.targets, id)
+	delete(m.checks, id)
 	return nil
 }
 
