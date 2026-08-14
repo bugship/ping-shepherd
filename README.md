@@ -1,61 +1,38 @@
 # Ping Shepherd
 
-> Repository: `ping-shepherd` · local only until we publish
+Go service that watches HTTP endpoints. Add targets, probe them on an interval, keep history in Postgres, and notify Telegram when something goes down.
 
-A **Go** flock-watcher for HTTP endpoints. You give it URLs; it shepherds them — probes on a schedule, remembers who went down, shows a status page, and pings you on Telegram when a sheep wanders off.
+## Status
 
-Not a generic “uptime API.” Not an Uptime Kuma clone. One binary you can run and defend in an interview.
+Working now:
 
-## What it will do
+- `GET /health`
+- `GET /ready`
+- `POST /targets`, `GET /targets`, `GET /targets/{id}`, `DELETE /targets/{id}`
 
-1. Add / list / remove HTTP targets
-2. Probe them on an interval and keep last status + history in Postgres
-3. Public status page
-4. Telegram alert on down / recovered
-5. Docker Compose, health checks, tests
+Still to build: checker loop, status page, Telegram.
 
-## What it will not do (on purpose)
-
-Teams, SSO, multi-region, incident theatre, a mobile app.
-
-## Current slice
-
-**1 — targets.** Add / list / get / delete HTTP targets (`POST|GET /targets`, `GET|DELETE /targets/{id}`). In-memory store for tests; Postgres + migrate when `DATABASE_URL` is set.
-
-## Tech
-
-| Layer | Choice |
-|-------|--------|
-| Language | Go |
-| HTTP | `net/http` (stdlib) |
-| DB | PostgreSQL via `database/sql` + `pgx` |
-| Ops | Docker Compose, Makefile |
-
-## Run (once Go is installed)
+## Run
 
 ```bash
 cp .env.example .env
-# start Postgres (Docker) or point DATABASE_URL at a local instance
 make test
 make run
 ```
 
-```text
+```bash
 curl -s localhost:8080/health
 ```
+
+Postgres is optional for tests (in-memory store). For `/ready` and persisted targets, set `DATABASE_URL` and start the Compose database.
 
 ## Layout
 
 ```
-ping-shepherd/
-├── cmd/shepherd/        # one binary: API now; worker later
-├── internal/
-│   ├── config/          # env
-│   ├── httpapi/         # HTTP handlers
-│   └── store/           # Postgres
-├── docker-compose.yml
-├── Makefile
-└── README.md
+cmd/shepherd/     process entrypoint
+internal/config/  env
+internal/httpapi/ HTTP handlers
+internal/store/   memory + Postgres
 ```
 
 ## License
