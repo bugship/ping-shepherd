@@ -1,4 +1,4 @@
-.PHONY: run test tidy fmt
+.PHONY: run test tidy fmt vuln
 
 BIN := .bin/ping-shepherd
 
@@ -13,6 +13,9 @@ tidy:
 
 fmt:
 	gofmt -w .
+
+vuln:
+	go run golang.org/x/vuln/cmd/govulncheck@latest ./...
 
 build: $(BIN)
 

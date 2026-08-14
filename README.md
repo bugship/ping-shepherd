@@ -2,17 +2,15 @@
 
 Go service that watches HTTP endpoints. Add targets, probe them on an interval, keep history in Postgres, and notify Telegram when something goes down.
 
-## Status
+https://github.com/bugship/ping-shepherd
 
-Working now:
+## HTTP
 
 - `GET /` status page
 - `GET /health`
 - `GET /ready`
 - `POST /targets`, `GET /targets`, `GET /targets/{id}`, `DELETE /targets/{id}`
 - `GET /targets/{id}/checks`
-- background probes on `CHECK_INTERVAL`
-- Telegram alerts on down / recovered (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`)
 
 ## Run
 
@@ -26,15 +24,28 @@ make run
 curl -s localhost:8080/health
 ```
 
-Postgres is optional for tests (in-memory store). For `/ready` and persisted targets, set `DATABASE_URL` and start the Compose database.
+Without `DATABASE_URL`, the process uses an in-memory store. For persisted targets, start Postgres and set `DATABASE_URL`.
+
+```bash
+docker compose up --build
+```
+
+Telegram alerts need `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. They fire on first down and on down/up transitions.
+
+```bash
+make vuln
+```
 
 ## Layout
 
 ```
-cmd/shepherd/     process entrypoint
-internal/config/  env
-internal/httpapi/ HTTP handlers
-internal/store/   memory + Postgres
+cmd/shepherd/      process entrypoint
+internal/config/   env
+internal/httpapi/  HTTP handlers and status page
+internal/checker/  probe loop and alerts
+internal/probe/    HTTP GET
+internal/notify/   Telegram
+internal/store/    memory + Postgres
 ```
 
 ## License
