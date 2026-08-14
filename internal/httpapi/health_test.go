@@ -13,7 +13,7 @@ func TestHealth(t *testing.T) {
 
 	res, err := http.Get(srv.URL + "/health")
 	if err != nil {
-		t.fatal(err)
+		t.Fatal(err)
 	}
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusOK {
@@ -21,7 +21,7 @@ func TestHealth(t *testing.T) {
 	}
 	var body map[string]string
 	if err := json.NewDecoder(res.Body).Decode(&body); err != nil {
-		t.fatal(err)
+		t.Fatal(err)
 	}
 	if body["status"] != "ok" || body["service"] != "ping-shepherd" {
 		t.Fatalf("body %#v", body)
@@ -34,7 +34,7 @@ func TestReadyWithoutDB(t *testing.T) {
 
 	res, err := http.Get(srv.URL + "/ready")
 	if err != nil {
-		t.fatal(err)
+		t.Fatal(err)
 	}
 	defer res.Body.Close()
 	if res.StatusCode != http.StatusServiceUnavailable {
