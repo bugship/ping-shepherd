@@ -6,13 +6,14 @@ Go service that watches HTTP endpoints. Add targets, probe them on an interval, 
 
 Working now:
 
+- `GET /` status page
 - `GET /health`
 - `GET /ready`
 - `POST /targets`, `GET /targets`, `GET /targets/{id}`, `DELETE /targets/{id}`
 - `GET /targets/{id}/checks`
 - background probes on `CHECK_INTERVAL`
 
-Still to build: status page, Telegram.
+Still to build: Telegram.
 
 ## Run
 

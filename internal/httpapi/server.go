@@ -16,12 +16,14 @@ type Backend interface {
 	GetTarget(context.Context, string) (store.Target, error)
 	DeleteTarget(context.Context, string) error
 	RecordCheck(context.Context, string, store.Check) (store.Check, error)
+	LatestCheck(context.Context, string) (store.Check, error)
 	ListChecks(context.Context, string, int) ([]store.Check, error)
 }
 
 // New returns the HTTP handler.
 func New(db Backend) http.Handler {
 	mux := http.NewServeMux()
+	mux.HandleFunc("GET /{$}", statusPage(db))
 	mux.HandleFunc("GET /health", health)
 	mux.HandleFunc("GET /ready", ready(db))
 	mux.HandleFunc("POST /targets", createTarget(db))

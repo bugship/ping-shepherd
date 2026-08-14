@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ping Shepherd</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font-family: ui-sans-serif, system-ui, sans-serif; margin: 2rem; line-height: 1.4; }
+    h1 { font-size: 1.4rem; }
+    table { border-collapse: collapse; width: 100%; max-width: 52rem; }
+    th, td { text-align: left; padding: 0.45rem 0.6rem; border-bottom: 1px solid #8884; }
+    .up { color: #0a0; }
+    .down { color: #c00; }
+    .unknown { color: #888; }
+    .muted { color: #888; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+  <h1>Ping Shepherd</h1>
+  <p class="muted">Last rendered {{.Now.UTC.Format "2006-01-02 15:04:05"}} UTC</p>
+  {{if .Rows}}
+  <table>
+    <thead>
+      <tr>
+        <th>Target</th>
+        <th>Status</th>
+        <th>Code</th>
+        <th>Latency</th>
+        <th>Checked</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{range .Rows}}
+      <tr>
+        <td>
+          <div>{{.Name}}</div>
+          <div class="muted">{{.URL}}</div>
+        </td>
+        <td class="{{.Class}}">{{.Status}}</td>
+        <td>{{if .HasCheck}}{{.StatusCode}}{{else}}—{{end}}</td>
+        <td>{{if .HasCheck}}{{.LatencyMS}} ms{{else}}—{{end}}</td>
+        <td>{{if .HasCheck}}{{.CheckedAt.UTC.Format "15:04:05"}}{{else}}never{{end}}</td>
+      </tr>
+      {{end}}
+    </tbody>
+  </table>
+  {{else}}
+  <p>No targets yet. POST /targets to add one.</p>
+  {{end}}
+</body>
+</html>
