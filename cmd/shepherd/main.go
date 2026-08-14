@@ -23,6 +23,8 @@ func main() {
 	db, err := store.Open(ctx, cfg.DatabaseURL)
 	if err != nil {
 		log.Printf("postgres not ready (%v); /ready will fail until it is", err)
+	} else if err := db.Migrate(ctx); err != nil {
+		log.Fatalf("migrate: %v", err)
 	}
 	if db != nil {
 		defer db.Close()

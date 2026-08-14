@@ -20,7 +20,7 @@ Teams, SSO, multi-region, incident theatre, a mobile app.
 
 ## Current slice
 
-**0 — scaffold.** Config from env, `GET /health`, `GET /ready` (Postgres ping), Makefile, Compose for the database.
+**1 — targets.** Add / list / get / delete HTTP targets (`POST|GET /targets`, `GET|DELETE /targets/{id}`). In-memory store for tests; Postgres + migrate when `DATABASE_URL` is set.
 
 ## Tech
 

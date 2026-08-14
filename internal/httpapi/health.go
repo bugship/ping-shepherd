@@ -3,8 +3,6 @@ package httpapi
 import (
 	"encoding/json"
 	"net/http"
-
-	"github.com/bugship/ping-shepherd/internal/store"
 )
 
 func health(w http.ResponseWriter, _ *http.Request) {
@@ -14,7 +12,7 @@ func health(w http.ResponseWriter, _ *http.Request) {
 	})
 }
 
-func ready(db *store.DB) http.HandlerFunc {
+func ready(db Backend) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		if db == nil {
 			writeJSON(w, http.StatusServiceUnavailable, map[string]string{
