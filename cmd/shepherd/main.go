@@ -9,9 +9,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/bugship/canary-coop/internal/config"
-	"github.com/bugship/canary-coop/internal/httpapi"
-	"github.com/bugship/canary-coop/internal/store"
+	"github.com/bugship/ping-shepherd/internal/config"
+	"github.com/bugship/ping-shepherd/internal/httpapi"
+	"github.com/bugship/ping-shepherd/internal/store"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 	}
 
 	go func() {
-		log.Printf("canary-coop listening on %s", cfg.Addr())
+		log.Printf("ping-shepherd listening on %s", cfg.Addr())
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %v", err)
 		}

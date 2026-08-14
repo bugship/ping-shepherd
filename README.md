@@ -1,20 +1,22 @@
-# HTTP Uptime Monitor
+# Ping Shepherd
 
-> Repository: `canary-coop` · local only until we publish
+> Repository: `ping-shepherd` · local only until we publish
 
-Small **Go** service that watches HTTP endpoints, stores check history, and exposes a status page. Built to be résumé-honest: one process you can run and explain, not a clone of [Uptime Kuma](https://github.com/louislam/uptime-kuma).
+A **Go** flock-watcher for HTTP endpoints. You give it URLs; it shepherds them — probes on a schedule, remembers who went down, shows a status page, and pings you on Telegram when a sheep wanders off.
+
+Not a generic “uptime API.” Not an Uptime Kuma clone. One binary you can run and defend in an interview.
 
 ## What it will do
 
 1. Add / list / remove HTTP targets
 2. Probe them on an interval and keep last status + history in Postgres
 3. Public status page
-4. One alert channel (Telegram) on down / recovered
+4. Telegram alert on down / recovered
 5. Docker Compose, health checks, tests
 
 ## What it will not do (on purpose)
 
-Teams, SSO, multi-region, fancy incident timelines, mobile apps.
+Teams, SSO, multi-region, incident theatre, a mobile app.
 
 ## Current slice
 
@@ -45,8 +47,8 @@ curl -s localhost:8080/health
 ## Layout
 
 ```
-canary-coop/
-├── cmd/coop/            # one binary: API now; worker later
+ping-shepherd/
+├── cmd/shepherd/        # one binary: API now; worker later
 ├── internal/
 │   ├── config/          # env
 │   ├── httpapi/         # HTTP handlers

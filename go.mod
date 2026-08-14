@@ -1,3 +1,3 @@
-module github.com/bugship/canary-coop
+module github.com/bugship/ping-shepherd
 
 go 1.22

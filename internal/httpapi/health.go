@@ -4,13 +4,13 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/bugship/canary-coop/internal/store"
+	"github.com/bugship/ping-shepherd/internal/store"
 )
 
 func health(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{
 		"status":  "ok",
-		"service": "canary-coop",
+		"service": "ping-shepherd",
 	})
 }
 

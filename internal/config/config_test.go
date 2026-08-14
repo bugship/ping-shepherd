@@ -16,7 +16,7 @@ func TestFromEnvDefaults(t *testing.T) {
 
 func TestFromEnvOverrides(t *testing.T) {
 	t.Setenv("PORT", "9090")
-	t.Setenv("DATABASE_URL", "postgres://coop@localhost/canary")
+	t.Setenv("DATABASE_URL", "postgres://shepherd@localhost/ping_shepherd")
 	cfg := FromEnv()
 	if cfg.Port != "9090" {
 		t.Fatalf("port: got %q", cfg.Port)

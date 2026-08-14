@@ -3,7 +3,7 @@ package httpapi
 import (
 	"net/http"
 
-	"github.com/bugship/canary-coop/internal/store"
+	"github.com/bugship/ping-shepherd/internal/store"
 )
 
 func New(db *store.DB) http.Handler {

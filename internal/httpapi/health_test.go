@@ -23,7 +23,7 @@ func TestHealth(t *testing.T) {
 	if err := json.NewDecoder(res.Body).Decode(&body); err != nil {
 		t.fatal(err)
 	}
-	if body["status"] != "ok" || body["service"] != "canary-coop" {
+	if body["status"] != "ok" || body["service"] != "ping-shepherd" {
 		t.Fatalf("body %#v", body)
 	}
 }

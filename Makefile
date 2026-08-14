@@ -1,9 +1,9 @@
 .PHONY: run test tidy fmt
 
-BIN := .bin/coop
+BIN := .bin/ping-shepherd
 
 run:
-	go run ./cmd/coop
+	go run ./cmd/shepherd
 
 test:
 	go test ./...
@@ -18,4 +18,4 @@ build: $(BIN)
 
 $(BIN):
 	mkdir -p .bin
-	go build -o $(BIN) ./cmd/coop
+	go build -o $(BIN) ./cmd/shepherd
