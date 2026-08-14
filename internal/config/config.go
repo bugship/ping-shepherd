@@ -9,19 +9,23 @@ import (
 
 // Config is runtime settings for the shepherd process.
 type Config struct {
-	Port          string
-	DatabaseURL   string
-	CheckInterval time.Duration
-	CheckTimeout  time.Duration
+	Port           string
+	DatabaseURL    string
+	CheckInterval  time.Duration
+	CheckTimeout   time.Duration
+	TelegramToken  string
+	TelegramChatID string
 }
 
-// FromEnv reads PORT, DATABASE_URL, CHECK_INTERVAL, and CHECK_TIMEOUT.
+// FromEnv reads process settings from the environment.
 func FromEnv() Config {
 	return Config{
-		Port:          envOr("PORT", "8080"),
-		DatabaseURL:   strings.TrimSpace(os.Getenv("DATABASE_URL")),
-		CheckInterval: durationOr("CHECK_INTERVAL", 30*time.Second),
-		CheckTimeout:  durationOr("CHECK_TIMEOUT", 5*time.Second),
+		Port:           envOr("PORT", "8080"),
+		DatabaseURL:    strings.TrimSpace(os.Getenv("DATABASE_URL")),
+		CheckInterval:  durationOr("CHECK_INTERVAL", 30*time.Second),
+		CheckTimeout:   durationOr("CHECK_TIMEOUT", 5*time.Second),
+		TelegramToken:  strings.TrimSpace(os.Getenv("TELEGRAM_BOT_TOKEN")),
+		TelegramChatID: strings.TrimSpace(os.Getenv("TELEGRAM_CHAT_ID")),
 	}
 }
 

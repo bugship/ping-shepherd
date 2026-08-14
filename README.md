@@ -12,8 +12,7 @@ Working now:
 - `POST /targets`, `GET /targets`, `GET /targets/{id}`, `DELETE /targets/{id}`
 - `GET /targets/{id}/checks`
 - background probes on `CHECK_INTERVAL`
-
-Still to build: Telegram.
+- Telegram alerts on down / recovered (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`)
 
 ## Run
 

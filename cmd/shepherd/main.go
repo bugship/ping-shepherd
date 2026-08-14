@@ -13,6 +13,7 @@ import (
 	"github.com/bugship/ping-shepherd/internal/checker"
 	"github.com/bugship/ping-shepherd/internal/config"
 	"github.com/bugship/ping-shepherd/internal/httpapi"
+	"github.com/bugship/ping-shepherd/internal/notify"
 	"github.com/bugship/ping-shepherd/internal/store"
 )
 
@@ -27,7 +28,12 @@ func main() {
 		defer closer()
 	}
 
-	go checker.Loop(ctx, backend, cfg.CheckInterval, cfg.CheckTimeout)
+	var alert checker.Sender
+	if cfg.TelegramToken != "" && cfg.TelegramChatID != "" {
+		alert = notify.Telegram{Token: cfg.TelegramToken, ChatID: cfg.TelegramChatID}
+		log.Printf("telegram alerts enabled")
+	}
+	go checker.Loop(ctx, backend, cfg.CheckInterval, cfg.CheckTimeout, alert)
 
 	srv := &http.Server{
 		Addr:              cfg.Addr(),
